@@ -1,3 +1,5 @@
 # Week 1
 
-Documenting my Python knowledge in public and building my first automation projects.
+### Workflows
+
+The goal is to build an enquiry router in n8n that sends each enquiry to the right category.
