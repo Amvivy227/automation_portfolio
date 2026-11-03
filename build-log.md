@@ -46,5 +46,19 @@ It is worth noting that the IF node on n8n workflow is case-sensitive, but I was
 <img width="937" height="464" alt="image" src="https://github.com/user-attachments/assets/b5c906c2-3412-4bbd-a978-8474d3c686ee" />
 
 
+### Day 4 - Switch Node
+
+*Replaced the IF node with a switch node.*
+
+Using the switch node, I was able to split the enquiries data into multiple paths based on different conditions. Unlike the IF node that only has 2 outputs of True or False, the Switch node can have multiple outputs, making it easier to manage several categories in one place. 
+Lastly, the Switch node has a behaviour similar to an IF, ELIF, ELSE construct.
+
+<img width="954" height="448" alt="image" src="https://github.com/user-attachments/assets/0cc8095f-710c-4319-b44f-d0efba426ad5" />
+
+<img width="959" height="450" alt="image" src="https://github.com/user-attachments/assets/5fd21228-8419-4662-93c1-0c4a7438e8b6" />
+
+<img width="944" height="445" alt="image" src="https://github.com/user-attachments/assets/92679e97-a057-4d4d-be20-80f1f40248e8" />
+
+<img width="960" height="446" alt="image" src="https://github.com/user-attachments/assets/746edfd6-2564-4a10-bbaf-c2514c45a53f" />
 
 
