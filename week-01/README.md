@@ -4,7 +4,7 @@
 
 The goal is to build an enquiry router in n8n that sends each enquiry to the right category and  a corresponding python code build-up.
 
-#### python
+#### Python
 Made some mistakes earlier while trying to write a python function to return the category of enquiries and specify them as "unknown" if missing. Below are the errors and how I finally got to fix them:
 
 1. printed the get_category instead of return
@@ -13,7 +13,7 @@ Cause: I used print instead of return, and looped over the whole list inside the
 Fix: The function takes one enquiry and returns its category. The loop sits outside it.
 Lesson: A function should do one job and hand back a value.
 
-2. Missing-field check could never trigger
+2. Missing field check could never trigger
 Observed Behaviour: The "unknown" branch never ran.
 Cause: I compared a whole dictionary to an empty string (i != ""), which is always true.
 Fix: Check for the key instead: if "category" in enquiry, or use enquiry.get("category", "unknown").
