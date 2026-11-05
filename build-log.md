@@ -76,8 +76,6 @@ Setup: 10 sample enquiries going into a Switch node with 3 rules (Sales, Support
 <img width="922" height="396" alt="image" src="https://github.com/user-attachments/assets/00ddeb67-4194-4b48-a9e2-981d81c937ce" />
 
 
-<img width="957" height="444" alt="image" src="https://github.com/user-attachments/assets/8c391075-f5c8-4bd8-b605-4fdb5b9a48d8" />
-
 1. Missing key and empty value silently dropped
 Observed Behaviour: The General output went from 3 items to 2, with no error.
 Cause: One enquiry had an empty category and another had no category key. The Switch had no rule for them, so they matched nothing and were discarded.
@@ -105,8 +103,9 @@ Observed Behaviour: Values like "Sales" landed in the fallback output.
 Cause: String comparison is case-sensitive by default.
 Fix: Turned on the Ignore Case option in the Switch node.
 Lesson: Casing differences are common in real data. Handle them before or inside routing.
+<img width="957" height="444" alt="image" src="https://github.com/user-attachments/assets/8c391075-f5c8-4bd8-b605-4fdb5b9a48d8" />
 
-5. Trailing whitespace sent to Unknown
+6. Trailing whitespace sent to Unknown
 Observed Behaviour: "sales " (with a trailing space) landed in Unknown.
 Cause: Spaces count in an exact comparison, and Ignore Case doesn’t remove them.
 Fix: Added an Edit Fields node before the Switch (Manual Mapping, field category, with the “Include Other Input Fields” option on) using {{ ($json.category || "").toString().trim() }}.
