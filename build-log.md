@@ -65,3 +65,57 @@ Lastly, the Switch node has a behaviour similar to an IF, ELIF, ELSE construct. 
 
 <img width="907" height="452" alt="image" src="https://github.com/user-attachments/assets/af655584-c3fc-484a-9edd-3c2e222941cc" />
 
+
+### Day 5: Failures and Fixes themed "Break it on Purpose and Fix it"
+
+Today, I carried out different tests to see how the switch node outputs hold up with categorizing and routing data. From leaving fields empty, removing key:value pairs entirely, mispelling categories, adding trailing whitespaces, to changing casing and adding unexpected categories. Then, I observed closely for fallthroughs and added fallbacks to cater to these failures.
+
+Setup: 10 sample enquiries going into a Switch node with 3 rules (Sales, Support, General). Rule 4 (Missing Category) and a fallback output (Unknown) were added during testing. Rule: the total across all outputs must equal the number of items going in.
+
+#### n8n workflow
+<img width="922" height="396" alt="image" src="https://github.com/user-attachments/assets/00ddeb67-4194-4b48-a9e2-981d81c937ce" />
+
+
+<img width="957" height="444" alt="image" src="https://github.com/user-attachments/assets/8c391075-f5c8-4bd8-b605-4fdb5b9a48d8" />
+
+1. Missing key and empty value silently dropped
+Observed Behaviour: The General output went from 3 items to 2, with no error.
+Cause: One enquiry had an empty category and another had no category key. The Switch had no rule for them, so they matched nothing and were discarded.
+Fix: Enabled the fallback output, and added Rule 4 ({{ $json.category }} is equal to an empty value), renamed “Missing Category”. It now catches both the missing key and the empty string (confirmed: 2 items landed there).
+Lesson: Without a fallback, bad data disappears silently. Always check that output counts add up to the input count.
+<img width="921" height="409" alt="image" src="https://github.com/user-attachments/assets/daf64234-0868-4c9e-9050-03dfde895a3b" />
+
+
+2. Unexpected category ("technical")
+Observed Behaviour: None. The test passed.
+Cause: The category isn’t one of the three defined routes.
+Fix: No new fix needed. The fallback output (renamed “Unknown”) caught it.
+Lesson: A category I didn’t plan for gets routed to a human instead of lost.
+<img width="940" height="443" alt="image" src="https://github.com/user-attachments/assets/e5be3b00-b87b-4556-b7e6-1f33900275ff" />
+
+
+3. Misspelled categories
+Observed Behaviour: None. The test passed.
+Cause: The Switch compares strings exactly, so a misspelling doesn’t match any rule.
+Fix: No new fix needed. The items landed in Unknown.
+Lesson: The workflow catches misspellings but doesn’t correct them, which is deliberate. Sending them over for human verification.
+
+4. Title case categories sent to Unknown
+Observed Behaviour: Values like "Sales" landed in the fallback output.
+Cause: String comparison is case-sensitive by default.
+Fix: Turned on the Ignore Case option in the Switch node.
+Lesson: Casing differences are common in real data. Handle them before or inside routing.
+
+5. Trailing whitespace sent to Unknown
+Observed Behaviour: "sales " (with a trailing space) landed in Unknown.
+Cause: Spaces count in an exact comparison, and Ignore Case doesn’t remove them.
+Fix: Added an Edit Fields node before the Switch (Manual Mapping, field category, with the “Include Other Input Fields” option on) using {{ ($json.category || "").toString().trim() }}.
+Lesson: Clean the data first, then route it. Ignore Case still handles capitalisation.
+<img width="923" height="402" alt="image" src="https://github.com/user-attachments/assets/78ec0cc0-0e84-4276-90f0-61d9fca25e83" />
+
+
+#### Python
+Wrote a function get_category(enquiry) that returns the category of an enquiry, or returns "unknown" if the field is missing.
+
+<img width="889" height="448" alt="image" src="https://github.com/user-attachments/assets/28550b53-4dec-4181-9fb4-da9f0e6fe2df" />
+
