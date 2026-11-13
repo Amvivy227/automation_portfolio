@@ -51,7 +51,7 @@ Python: `switch_node.ipynb`
   conditions, such as its category.
 
 
-#### What Broke in Python
+## What Broke in Python (and how I fixed it)
 I made some mistakes earlier while trying to write a python function to return the category of enquiries and specify them as "unknown" if missing. Below are the errors and how I finally got to fix them:
 
 1. printed the get_category instead of return
