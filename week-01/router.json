@@ -1,0 +1,218 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "sales",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a6a43fe0-05e6-4762-81aa-445b360e0d6f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sales"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "f2d1389e-df82-4cdf-bc01-ddee3e2e72c3",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Support"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "25d4d7b3-685f-4a5d-99f8-62baae85d971",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "general",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "General"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "4ae24c5b-59c3-47a3-acab-25f06d5858a9",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Missing Category"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true,
+          "renameFallbackOutput": "Unknown"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        768,
+        -48
+      ],
+      "id": "90c31a96-3cfe-4dfa-95d7-3b943ed224ed",
+      "name": "Route enquiries to their appropriate category block"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27667f1d-cdaf-420e-9bb5-0b8616db345a",
+              "name": "category",
+              "value": "={{ ($json.category || \"\").toString().trim()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "c676b180-d176-4a2d-bf3a-d1b2e3aec5b7",
+      "name": "Remove Trailing Whitespaces"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { name: \"Vivian\", message: \"Are you available for business today?\", category: \"support\" } },\n  { json: { name: \"Amarachi\", message: \"Do you operate on Sundays?\", category: \"support\" } },\n  { json: { name: \"Aardbei\", message: \"What is your social media handle?\", category: \"general\" } },\n  { json: { name: \"Meisje\", message: \"How much do you charge?\", category: \"sales\" } },\n  { json: { name: \"Tunde\", message: \"Can I get a quote for 50 branded notebooks?\", category: \"sales \" } },\n  { json: { name: \"Chioma\", message: \"My order arrived damaged. What should I do?\", category: \"support\" } },\n  { json: { name: \"Ibrahim\", message: \"Where is your office located?\", category: \"General\" } },\n  { json: { name: \"Folake\", message: \"Do you offer discounts for bulk purchases?\", } },\n  { json: { name: \"Emeka\", message: \"I was charged twice for my last payment.\", category: \"technical\" } },\n  { json: { name: \"Zainab\", message: \"Do you have a newsletter I can subscribe to?\", category: \"\" } },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        16
+      ],
+      "id": "c59252fe-4835-4225-ae33-1569c4faf830",
+      "name": "Get the Enquiries"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "15b5ee08-bf7e-4519-acd2-cb8669aed15e",
+      "name": "Start workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Remove Trailing Whitespaces": {
+      "main": [
+        [
+          {
+            "node": "Route enquiries to their appropriate category block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the Enquiries": {
+      "main": [
+        [
+          {
+            "node": "Remove Trailing Whitespaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start workflow": {
+      "main": [
+        [
+          {
+            "node": "Get the Enquiries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ee93855a-7d8d-4f44-a373-00a9086edd0b",
+  "meta": {
+    "instanceId": "8dbfbd7865c474a9ae343f3def73d54183a8664ee97db8dd8a23b7c9129f4d71"
+  },
+  "nodeGroups": [],
+  "id": "SkSajTcyqLU8F2Sh",
+  "tags": []
+}
